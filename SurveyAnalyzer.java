@@ -1,5 +1,3 @@
-package codeBundle;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -136,9 +134,9 @@ public class SurveyAnalyzer {
 				writer.write("bc ");
 				
 				// Education Boundary Color
-				String ageStr = nodes.get(i).getAge().split("\\.")[0].replaceAll("[^0-9]", "");
+				String grade = nodes.get(i).getGrade().split("\\.")[0].replaceAll("[^0-9]", "");
 				
-				switch(ageStr) {
+				switch(grade) {
 				case "8":
 					writer.write("Gray15 ");
 					break;
@@ -179,13 +177,15 @@ public class SurveyAnalyzer {
 				boolean v = Boolean.parseBoolean(nodes.get(i).getFrequency());
 				boolean inf = Boolean.parseBoolean(nodes.get(i).getInfluence());
 				
-				if (v&&inf)
+				if (nodes.get(i).getFrequency().equals("N/A"))
+					writer.write("White");
+				else if (v&&inf)
 					writer.write("Red");
-				if (!v&&inf)
+				else if (!v&&inf)
 					writer.write("Blue");
-				if (v&&!inf)
+				else if (v&&!inf)
 					writer.write("Melon");
-				else
+				else if (!v&&!inf)
 					writer.write("LightCyan");
 				
 				writer.write("\n");
