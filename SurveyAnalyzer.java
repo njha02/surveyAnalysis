@@ -32,7 +32,7 @@ public class SurveyAnalyzer {
 			
 			rowIterator.next(); // skip the headings
 			int rowNum = 1;
-			final int colsToRead = 8;
+			final int colsToRead = 10;
 			String[] varVals = new String[colsToRead];
 			
 			while (rowIterator.hasNext()) {
@@ -51,14 +51,15 @@ public class SurveyAnalyzer {
 					colCount++;
 				}
 				
-				String consent = varVals[0];
-				String age = varVals[1];
-				String grade = varVals[2];
-				String gender = varVals[3];
-				String referrals = varVals[4];
-				String influence = varVals[5];
-				String frequency = varVals[6];
-				String name = varVals[7];
+				String consent = varVals[2];
+				String name = varVals[3];
+				String age = varVals[4];
+				String grade = varVals[5];
+				String gender = varVals[6];
+				String referrals = varVals[7];
+				String influence = varVals[8];
+				String frequency = varVals[9];
+				
 				int id = rowNum;
 				
 				Node newSurveyTaker = new Node(consent,age,grade,gender,referrals,influence,frequency, name, id);
