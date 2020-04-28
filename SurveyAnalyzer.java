@@ -290,9 +290,13 @@ public class SurveyAnalyzer {
 					
 					writer.write("0\n");
 				
-				} else {
+				} else if (nodes.get(i).getInfluence().equals("true")) {
 					
 					writer.write("1\n");
+				
+				} else {
+					
+					writer.write("2\n");
 				}
 			}
 			
