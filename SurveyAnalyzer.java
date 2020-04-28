@@ -119,11 +119,11 @@ public class SurveyAnalyzer {
 			
 			if (upToNodeWithID != nodes.size()) {
 				
-				writer.write("*Network VapeSocialNetworkOnlyRespondents");
+				writer.write("*Network VapeSocialNetworkOnlyRespondents\n");
 			
 			} else {
 				
-				writer.write("*Network VapeSocialNetwork");
+				writer.write("*Network VapeSocialNetwork\n");
 			}
 			
 			writer.write("*vertices " + upToNodeWithID + "\n");
