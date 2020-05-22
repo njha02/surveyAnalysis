@@ -207,7 +207,6 @@ public class SurveyAnalyzer {
 				writer.write("\n");
 			}
 			
-			writer.write("\n");
 			writer.close();
 			
 		} catch (IOException e) {
