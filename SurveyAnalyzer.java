@@ -27,7 +27,7 @@ public class SurveyAnalyzer {
 			XSSFSheet mySheet = myWorkBook.getSheetAt(0);
 			Iterator<Row> rowIterator = mySheet.iterator();
 			
-			int capacity = mySheet.getPhysicalNumberOfRows() + 10;
+			int capacity = mySheet.getPhysicalNumberOfRows() + 50;
 			nodes = new ArrayList<Node>(capacity);
 			
 			rowIterator.next(); // skip the headings
@@ -46,7 +46,7 @@ public class SurveyAnalyzer {
 					Cell cell = cellIterator.next();
 					cell.setCellType(Cell.CELL_TYPE_STRING);
 					
-					varVals[colCount] = cell.getStringCellValue().toLowerCase();
+					varVals[colCount] = cell.getStringCellValue().toLowerCase().trim();
 					
 					colCount++;
 				}
@@ -93,7 +93,9 @@ public class SurveyAnalyzer {
 	}
 	
 	public void generateNodesFromReferrals() {
-			
+		
+		System.out.println("**The following need to take the survey**");
+		
 		for (int i = 0; i < actualSize; i++) {
 			
 			String[] nameTokens = nodes.get(i).getReferrals();
@@ -104,6 +106,7 @@ public class SurveyAnalyzer {
 				
 				if (!haveSurveyTaker(name)) {
 					
+					System.out.println(name);
 					Node newSurveyTaker = new Node(name, nodes.size()+1);
 					nodes.add(newSurveyTaker);
 				}
@@ -131,7 +134,8 @@ public class SurveyAnalyzer {
 			for (int i = 0; i < upToNodeWithID; i++) {
 				
 				// ID numbers
-				writer.write(nodes.get(i).getID()+" \""+nodes.get(i).getID()+"\" 0.5 0.5 ");
+				//writer.write(nodes.get(i).getID()+" \""+nodes.get(i).getID()+"\" 0.5 0.5 ");
+				writer.write(nodes.get(i).getID()+" \""+nodes.get(i).getName()+"\" 0.5 0.5 ");
 				
 				// Gender Shape
 				if (nodes.get(i).getGender().equals("male")) {
@@ -203,6 +207,7 @@ public class SurveyAnalyzer {
 				writer.write("\n");
 			}
 			
+			writer.write("\n");
 			writer.close();
 			
 		} catch (IOException e) {
@@ -289,13 +294,9 @@ public class SurveyAnalyzer {
 					
 					writer.write("0\n");
 				
-				} else if (nodes.get(i).getInfluence().equals("true")) {
-					
-					writer.write("1\n");
-				
 				} else {
 					
-					writer.write("2\n");
+					writer.write("1\n");
 				}
 			}
 			
@@ -389,6 +390,174 @@ public class SurveyAnalyzer {
 		}
 	}
 	
+	public void generateAnalysis(String toFile) {
+		
+		try {
+			
+			FileWriter writer = new FileWriter(toFile);
+			
+			writer.write("**VAPE &**\n");
+			writer.write("Male: " + getNodesWithGender("true", "male")[0] + "\n");
+			writer.write("Female: " + getNodesWithGender("true", "female")[0] + "\n");
+			writer.write("Heavily Influenced: " + getNodesWithInfluence("true", "true")[0] + "\n");
+			writer.write("NOT Heavily Influenced: " + getNodesWithInfluence("true", "false")[0] + "\n");
+			writer.write("9th Grade: " + getNodesWithGrade("true", "9th grade")[0] + "\n");
+			writer.write("10th Grade: " + getNodesWithGrade("true", "10th grade")[0] + "\n");
+			writer.write("11th Grade: " + getNodesWithGrade("true", "11th grade")[0] + "\n");
+			writer.write("12th Grade: " + getNodesWithGrade("true", "12th grade")[0] + "\n");
+			writer.write("Age 17 and under: " + getNodesWithAge("true", "Age 17 and under")[0] + "\n");
+			writer.write("Age 18+: " + getNodesWithAge("true", "Age 18+")[0] + "\n");
+			
+			writer.write("\n");
+			
+			writer.write("**DO NOT VAPE &**\n");
+			writer.write("Male: " + getNodesWithGender("false", "male")[0] + "\n");
+			writer.write("Female: " + getNodesWithGender("false", "female")[0] + "\n");
+			writer.write("Heavily Influenced: " + getNodesWithInfluence("false", "true")[0] + "\n");
+			writer.write("NOT Heavily Influenced: " + getNodesWithInfluence("false", "false")[0] + "\n");
+			writer.write("9th Grade: " + getNodesWithGrade("false", "9th grade")[0] + "\n");
+			writer.write("10th Grade: " + getNodesWithGrade("false", "10th grade")[0] + "\n");
+			writer.write("11th Grade: " + getNodesWithGrade("false", "11th grade")[0] + "\n");
+			writer.write("12th Grade: " + getNodesWithGrade("false", "12th grade")[0] + "\n");
+			writer.write("Age 17 and under: " + getNodesWithAge("false", "Age 17 and under")[0] + "\n");
+			writer.write("Age 18+: " + getNodesWithAge("false", "Age 18+")[0] + "\n");
+			
+			writer.write("\n");
+			
+			writer.write("**Calculate Totals**\n");
+			writer.write("Vapers: " + getTotalInfluence()[0] + "\n");
+			writer.write("Don't Vape: " + getTotalInfluence()[1] + "\n");
+			writer.write("Male: " + getNodesWithGender("true", "male")[1] + "\n");
+			writer.write("Female: " + getNodesWithGender("true", "female")[1] + "\n");
+			writer.write("Heavily Influenced: " + getNodesWithInfluence("true", "true")[1] + "\n");
+			writer.write("NOT Heavily Influenced: " + getNodesWithInfluence("true", "false")[1] + "\n");
+			writer.write("9th Grade: " + getNodesWithGrade("true", "9th grade")[1] + "\n");
+			writer.write("10th Grade: " + getNodesWithGrade("true", "10th grade")[1] + "\n");
+			writer.write("11th Grade: " + getNodesWithGrade("true", "11th grade")[1] + "\n");
+			writer.write("12th Grade: " + getNodesWithGrade("true", "12th grade")[1] + "\n");
+			writer.write("Age 17 and under: " + getNodesWithAge("true", "Age 17 and under")[1] + "\n");
+			writer.write("Age 18+: " + getNodesWithAge("true", "Age 18+")[1] + "\n");
+
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	// 1st element -- vapers & 2nd element nonvapers
+	private int[] getTotalInfluence() {
+		
+		int vapers = 0;
+		int nonvapers = 0;
+		
+		for (int i = 0; i < actualSize; i++) {
+			
+			if (nodes.get(i).getFrequency().equals("true"))
+				vapers++;
+			else
+				nonvapers++;
+		}
+		
+		int[] result = {vapers, nonvapers};
+		return result;
+	}
+	
+	// first element is with vape constraint and second element is for total calculation
+	private int[] getNodesWithAge(String vape, String age) {
+		
+		int count = 0;
+		int total = 0;
+		
+		if (age.equals("Age 17 and under")) {
+			
+			for (int i = 0; i < actualSize; i++) {
+				
+				Node n = nodes.get(i);
+				double nodeAge = Double.parseDouble(n.getAge());
+				
+				if (nodeAge <= 17)
+					total++;
+				if (n.getFrequency().equals(vape) && nodeAge <= 17)
+					count++;
+			}
+		
+		} else if (age.equals("Age 18+")) {
+			
+			for (int i = 0; i < actualSize; i++) {
+				
+				Node n = nodes.get(i);
+				double nodeAge = Double.parseDouble(n.getAge());
+				
+				if (nodeAge >= 18)
+					total++;
+				if (n.getFrequency().equals(vape) && nodeAge >= 18)
+					count++;
+			}
+		}
+		
+		int[] result = {count, total};
+		return result;
+	}
+	
+	private int[] getNodesWithGrade(String vape, String grade) {
+		
+		int count = 0;
+		int total = 0;
+		
+		for (int i = 0; i < actualSize; i++) {
+			
+			Node n = nodes.get(i);
+			
+			if (n.getGrade().equals(grade))
+				total++;
+			if (n.getFrequency().equals(vape) && n.getGrade().equals(grade))
+				count++;
+		}
+		
+		int[] result = {count, total};
+		return result;
+	}
+	
+	private int[] getNodesWithGender(String vape, String gender) {
+		
+		int count = 0;
+		int total = 0;
+		
+		for (int i = 0; i < actualSize; i++) {
+			
+			Node n = nodes.get(i);
+			
+			if (n.getGender().equals(gender))
+				total++;
+			if (n.getFrequency().equals(vape) && n.getGender().equals(gender))
+				count++;
+		}
+		
+		int[] result = {count, total};
+		return result;
+	}
+	
+	private int[] getNodesWithInfluence(String vape, String heavilyInfluenced) {
+		
+		int count = 0;
+		int total = 0;
+		
+		for (int i = 0; i < actualSize; i++) {
+			
+			Node n = nodes.get(i);
+			
+			if (n.getInfluence().equals(heavilyInfluenced))
+				total++;
+			if (n.getFrequency().equals(vape) && n.getInfluence().equals(heavilyInfluenced))
+				count++;
+		}
+
+		int[] result = {count, total};
+		return result;
+	}
+
 	public ArrayList<Node> getNodes() {
 		
 		return nodes;
@@ -423,5 +592,5 @@ public class SurveyAnalyzer {
 		}
 		
 		return null;
-	}
+	}	
 }
