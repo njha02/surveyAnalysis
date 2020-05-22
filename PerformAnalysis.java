@@ -5,14 +5,18 @@ public class PerformAnalysis {
 		
 		long startTime = System.nanoTime();
 		
-		SurveyAnalyzer analyzer = new SurveyAnalyzer("");
+		SurveyAnalyzer analyzer = new SurveyAnalyzer("/Users/NalinJha/Downloads/SocialNetworkSurveyResults.xlsx");
 		
 		analyzer.generateNodesFromReferrals(); // must do this before performing any analysis
-		
+				
 		final String onlyRespondentsFilename = "OnlyRespondents.txt";
 		final String allDataFilename = "AllData.txt";
+		final String analysisFilename = "Analysis.txt";
 		final int allSize = analyzer.getNodes().size();
 		final int respondentsSize = analyzer.getActualSize();
+		
+		// Generate Analysis File
+		analyzer.generateAnalysis(analysisFilename);
 		
 		// Generate file considering all nodes
 		analyzer.generateNodesFile(allDataFilename, allSize, false);
