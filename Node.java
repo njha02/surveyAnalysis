@@ -10,6 +10,7 @@ public class Node {
 	private String frequency;
 	private String name;
 	private int id;
+	private int referredCount;
 	
 	public Node(String c, String a, String gr, String gen, String ref, String i, String f, String n, int num) {
 		
@@ -22,6 +23,7 @@ public class Node {
 		frequency = f;
 		name = n;
 		id = num;
+		referredCount = 0;
 	}
 	
 	public Node(String n, int num) { // constructor used for nodes created through referrals
@@ -36,6 +38,7 @@ public class Node {
 		frequency = "2";
 		name = n;
 		id = num;
+		referredCount = 1;
 	}
 	
 	public String toString() {
@@ -113,5 +116,15 @@ public class Node {
 
 	public void setID(int id) {
 		this.id = id;
+	}
+	
+	public int getReferredCount() {
+		
+		return referredCount;
+	}
+	
+	public void setReferredCount(int referredCount) {
+		
+		this.referredCount = referredCount;
 	}
 }
