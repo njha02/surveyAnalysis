@@ -1,7 +1,8 @@
+import java.io.IOException;
 
 public class PerformAnalysis {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		long startTime = System.nanoTime();
 		
@@ -24,6 +25,9 @@ public class PerformAnalysis {
 		
 		// Generate Analysis File
 		analyzer.generateAnalysis(analysisFilename);
+		
+		// Generate Analysis Spreadsheet
+		analyzer.generateAnalysisSpreadsheet("ExcelAnalysis");
 		
 		// Generate file considering all nodes
 		analyzer.generateNodesFile(allDataFilename, allSize, false);
