@@ -8,7 +8,14 @@ public class PerformAnalysis {
 		SurveyAnalyzer analyzer = new SurveyAnalyzer("/Users/NalinJha/Downloads/SocialNetworkSurveyResults.xlsx");
 		
 		analyzer.generateNodesFromReferrals(); // must do this before performing any analysis
-				
+		
+		System.out.println("**The Most Referred Nodes**");
+		
+		for (Node n : analyzer.mostReferred(5)) {
+			
+			System.out.println(n.getName() + " " + n.getReferredCount());
+		}
+		
 		final String onlyRespondentsFilename = "OnlyRespondents.txt";
 		final String allDataFilename = "AllData.txt";
 		final String analysisFilename = "Analysis.txt";
