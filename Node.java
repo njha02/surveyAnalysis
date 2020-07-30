@@ -18,7 +18,7 @@ public class Node {
 		age = a;
 		grade = gr;
 		gender = gen;
-		referrals = ref.split(", ");
+		referrals = cleanReferrals(ref.split(", "));
 		influence = i;
 		frequency = f;
 		name = n;
@@ -126,5 +126,28 @@ public class Node {
 	public void setReferredCount(int referredCount) {
 		
 		this.referredCount = referredCount;
+	}
+	
+	private String[] cleanReferrals(String[] r) {
+		
+		int count = r.length;
+		
+		for (String s : r)
+			if (s.equals("n/a"))
+				count--;
+		
+		String[] newRef = new String[count];
+		int newRefIndex = 0;
+		
+		for (int i = 0; i < r.length; i++) {
+			
+			if (!r[i].equals("n/a")) {
+				
+				newRef[newRefIndex] = r[i];
+				newRefIndex++;
+			}
+		}
+		
+		return newRef;
 	}
 }
