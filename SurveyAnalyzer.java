@@ -1,8 +1,11 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -442,6 +445,116 @@ public class SurveyAnalyzer {
 		}
 	}
 	
+	/**
+	 * Writing data to an Excel file
+	 * using the Apache POI library.
+	 *
+	 * Reference www.codejava.net
+	 */
+	public void generateAnalysisSpreadsheet(String sheetName) throws IOException {
+		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Analysis");
+        
+        // vape stats
+        int vM = getNodesWithGender("true", "male")[0];
+        int vF = getNodesWithGender("true", "female")[0];
+        int vHI = getNodesWithInfluence("true", "true")[0];
+        int vNHI = getNodesWithInfluence("true", "false")[0];
+        int v9 = getNodesWithGrade("true", "9th grade")[0];
+        int v10 = getNodesWithGrade("true", "10th grade")[0];
+        int v11 = getNodesWithGrade("true", "11th grade")[0];
+        int v12 = getNodesWithGrade("true", "12th grade")[0];
+        int v17 = getNodesWithAge("true", "Age 17 and under")[0];
+        int v18 = getNodesWithAge("true", "Age 18+")[0];
+        
+        // don't vape stats
+        int dvM = getNodesWithGender("false", "male")[0];
+        int dvF = getNodesWithGender("false", "female")[0];
+        int dvHI = getNodesWithInfluence("false", "true")[0];
+        int dvNHI = getNodesWithInfluence("false", "false")[0];
+        int dv9 = getNodesWithGrade("false", "9th grade")[0];
+        int dv10 = getNodesWithGrade("false", "10th grade")[0];
+        int dv11 = getNodesWithGrade("false", "11th grade")[0];
+        int dv12 = getNodesWithGrade("false", "12th grade")[0];
+        int dv17 = getNodesWithAge("false", "Age 17 and under")[0];
+        int dv18 = getNodesWithAge("false", "Age 18+")[0];
+        
+        // total stats
+        int tM = getNodesWithGender("true", "male")[1];
+        int tF = getNodesWithGender("true", "female")[1];
+        int tHI = getNodesWithInfluence("true", "true")[1];
+        int tNHI = getNodesWithInfluence("true", "false")[1];
+        int t9 = getNodesWithGrade("true", "9th grade")[1];
+        int t10 = getNodesWithGrade("true", "10th grade")[1];
+        int t11 = getNodesWithGrade("true", "11th grade")[1];
+        int t12 = getNodesWithGrade("true", "12th grade")[1];
+        int t17 = getNodesWithAge("true", "Age 17 and under")[1];
+        int t18 = getNodesWithAge("true", "Age 18+")[1];
+        
+        // percentage stats -- Vape
+        double pvM = (1.0*vM / actualSize) * 100.0;
+        double pvF = (1.0*vF / actualSize) * 100.0;
+        double pvHI = (1.0*vHI / actualSize) * 100.0;
+        double pvNHI = (1.0*vNHI / actualSize) * 100.0;
+        double pv9 = (1.0*v9 / actualSize) * 100.0;
+        double pv10 = (1.0*v10 / actualSize) * 100.0;
+        double pv11 = (1.0*v11 / actualSize) * 100.0;
+        double pv12 = (1.0*v12 / actualSize) * 100.0;
+        double pv17 = (1.0*v17 / actualSize) * 100.0;
+        double pv18 = (1.0*v18 / actualSize) * 100.0;
+        
+        // percentage stats -- Don't Vape
+        double pdvM = (1.0*dvM / actualSize) * 100.0;
+        double pdvF = (1.0*dvF / actualSize) * 100.0;
+        double pdvHI = (1.0*dvHI / actualSize) * 100.0;
+        double pdvNHI = (1.0*dvNHI / actualSize) * 100.0;
+        double pdv9 = (1.0*dv9 / actualSize) * 100.0;
+        double pdv10 = (1.0*dv10 / actualSize) * 100.0;
+        double pdv11 = (1.0*dv11 / actualSize) * 100.0;
+        double pdv12 = (1.0*dv12 / actualSize) * 100.0;
+        double pdv17 = (1.0*dv17 / actualSize) * 100.0;
+        double pdv18 = (1.0*dv18 / actualSize) * 100.0;
+        
+        Object[][] bookData = {
+           
+           {"", "Male", "Female", "Heavily Influenced", "Not Heavily Influenced", "9th grade", "10th grade", "11th grade", "12th grade", "Age 17 and under", "Age 18+"},
+           {"Vape", vM, vF, vHI, vNHI, v9, v10, v11, v12, v17, v18},
+           {"", pvM, pvF, pvHI, pvNHI, pv9, pv10, pv11, pv12, pv17, pv18},
+           {"Don't Vape", dvM, dvF, dvHI, dvNHI, dv9, dv10, dv11, dv12, dv17, dv18},
+           {"", pdvM, pdvF, pdvHI, pdvNHI, pdv9, pdv10, pdv11, pdv12, pdv17, pdv18},
+           {"Total", tM, tF, tHI, tNHI, t9, t10, t11, t12, t17, t18},
+        };
+ 
+        int rowCount = 0;
+         
+        for (Object[] aBook : bookData) {
+            
+        	Row row = sheet.createRow(++rowCount);
+             
+            int columnCount = 0;
+             
+            for (Object field : aBook) {
+                
+            	Cell cell = row.createCell(++columnCount);
+                
+            	if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                } else if (field instanceof Double) {
+                	
+                	double val = round((Double)(field), 2);
+                    cell.setCellValue(val);
+                }
+            }
+        }
+        
+        try (FileOutputStream outputStream = new FileOutputStream(sheetName + ".xlsx")) {
+            workbook.write(outputStream);
+        }
+	}
+	
 	public void generateAnalysis(String toFile) {
 		
 		try {
@@ -644,5 +757,15 @@ public class SurveyAnalyzer {
 		}
 		
 		return null;
-	}	
+	}
+	
+	// From: https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+	private static double round(double value, int places) {
+	    
+		if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = BigDecimal.valueOf(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}
 }
