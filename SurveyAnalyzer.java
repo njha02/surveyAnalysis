@@ -4,7 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -63,7 +66,9 @@ public class SurveyAnalyzer {
 				int id = rowNum;
 				
 				Node newSurveyTaker = new Node(consent,age,grade,gender,referrals,influence,frequency, name, id);
-				nodes.add(newSurveyTaker);
+				
+				if (!newSurveyTaker.getName().equals("n/a"))
+					nodes.add(newSurveyTaker);
 				
 				rowNum++;
 			}
@@ -92,6 +97,47 @@ public class SurveyAnalyzer {
 		return output;
 	}
 	
+	// reference GeeksForGeeks
+	public ArrayList<Node> mostReferred(int valOrMore) {
+
+		ArrayList<Node> popularNodes = new ArrayList<Node>();
+		Map<String, Integer> map = new HashMap<String, Integer>();
+
+		for (int i = 0; i < actualSize; i++) {
+			
+			String[] nameTokens = nodes.get(i).getReferrals();
+			
+			for (int j = 0; j < nameTokens.length; j++) {
+				
+				String name = nameTokens[j];
+				
+				if (map.containsKey(name)) {
+					
+					int freq = map.get(name);
+					freq++;
+					map.put(name, freq);
+				
+				} else {
+					
+					map.put(name, 1);
+				}
+			}
+		}
+
+		//int max_count = 0;
+		
+		for (Entry<String, Integer> val : map.entrySet()) {
+			
+			if (val.getValue() >= valOrMore) {
+				
+				popularNodes.add(getNodeWithName(val.getKey()));
+				//max_count = val.getValue();
+			}
+		}
+		
+		return popularNodes;
+	}
+	
 	public void generateNodesFromReferrals() {
 		
 		System.out.println("**The following need to take the survey**");
@@ -103,6 +149,13 @@ public class SurveyAnalyzer {
 			for (int j = 0; j < nameTokens.length; j++) {
 				
 				String name = nameTokens[j];
+				Node referralNode = getNodeWithName(name);
+				
+				if (referralNode != null) {
+
+					int currRefCount = referralNode.getReferredCount();
+					referralNode.setReferredCount(currRefCount+1);
+				}
 				
 				if (!haveSurveyTaker(name)) {
 					
