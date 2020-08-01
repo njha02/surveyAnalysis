@@ -156,18 +156,18 @@ public class SurveyAnalyzer {
 				
 				if (referralNode != null) {
 
-					int currRefCount = referralNode.getReferredCount();
-					referralNode.setReferredCount(currRefCount+1);
+					referralNode.addTie();
+					referralNode.addStrength(j+1);
 				}
 				
 				if (!haveSurveyTaker(name)) {
 					
 					System.out.println(name);
-					Node newSurveyTaker = new Node(name, nodes.size()+1);
+					Node newSurveyTaker = new Node(name, nodes.size()+1, j+1);
 					nodes.add(newSurveyTaker);
 				}
 			}
-		}
+		}		
 	}
 	
 	public void generateNodesFile(String toFile, int upToNodeWithID, boolean append) {
