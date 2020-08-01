@@ -10,7 +10,8 @@ public class Node {
 	private String frequency;
 	private String name;
 	private int id;
-	private int referredCount;
+	private int ties;
+	private int strengthSum;
 	
 	public Node(String c, String a, String gr, String gen, String ref, String i, String f, String n, int num) {
 		
@@ -23,10 +24,11 @@ public class Node {
 		frequency = f;
 		name = n;
 		id = num;
-		referredCount = 0;
+		ties = 0;
+		strengthSum = 0;
 	}
 	
-	public Node(String n, int num) { // constructor used for nodes created through referrals
+	public Node(String n, int num, int s) { // constructor used for nodes created through referrals
 		
 		consent = "2";
 		age = "2";
@@ -38,12 +40,28 @@ public class Node {
 		frequency = "2";
 		name = n;
 		id = num;
-		referredCount = 1;
+		ties = 1;
+		strengthSum = s;
 	}
 	
 	public String toString() {
 		
 		return id+". "+name +" ==> "+referrals[0]+", "+referrals[1]+", "+referrals[2];
+	}
+	
+	public void addTie() {
+		
+		this.ties += 1;
+	}
+	
+	public void addStrength(int val) {
+		
+		this.strengthSum += val;
+	}
+	
+	public double calculateAverageStrength() {
+		
+		return (1.0*strengthSum) / ties;
 	}
 
 	public String getConsent() {
@@ -118,14 +136,24 @@ public class Node {
 		this.id = id;
 	}
 	
-	public int getReferredCount() {
+	public int getTies() {
 		
-		return referredCount;
+		return ties;
 	}
 	
-	public void setReferredCount(int referredCount) {
+	public void setTies(int ties) {
 		
-		this.referredCount = referredCount;
+		this.ties = ties;
+	}
+	
+	public int getStrengthSum() {
+		
+		return strengthSum;
+	}
+	
+	public void setStrengthSum(int strengthSum) {
+		
+		this.strengthSum = strengthSum;
 	}
 	
 	private String[] cleanReferrals(String[] r) {
