@@ -14,7 +14,7 @@ public class PerformAnalysis {
 		
 		for (Node n : analyzer.mostReferred(5)) {
 			
-			System.out.println(n.getName() + " " + n.getReferredCount());
+			System.out.println(n.getName() + " " + n.getTies());
 		}
 		
 		final String onlyRespondentsFilename = "OnlyRespondents.txt";
@@ -46,6 +46,16 @@ public class PerformAnalysis {
 		analyzer.generateAgeFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateInfluenceFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateEducationFile(onlyRespondentsFilename, respondentsSize, true);
+				
+		// TEMP
+		
+		System.out.println();
+		System.out.println("**Name -> Ties -> Total Strength -> Average Strength**");
+		
+		for (Node n : analyzer.getNodes()) {
+			
+			System.out.println(n.getName() + " -> " + n.getTies() + " -> " + n.getStrengthSum() + " -> " + n.calculateAverageStrength());
+		}
 		
 		long endTime = System.nanoTime();
 		double inSeconds = (endTime - startTime)/1000000000.0; // runtime in seconds
