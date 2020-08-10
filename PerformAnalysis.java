@@ -10,8 +10,10 @@ public class PerformAnalysis {
 		
 		analyzer.generateNodesFromReferrals(); // must do this before performing any analysis
 		
-		System.out.println("**The Most Referred Nodes**");
+		System.out.println();
 		
+		System.out.println("**Nodes with 5 or more referrals**");
+				
 		for (Node n : analyzer.mostReferred(5)) {
 			
 			System.out.println(n.getName() + " " + n.getTies());
@@ -27,7 +29,9 @@ public class PerformAnalysis {
 		analyzer.generateAnalysis(analysisFilename);
 		
 		// Generate Analysis Spreadsheet
-		analyzer.generateAnalysisSpreadsheet("ExcelAnalysis");
+		analyzer.generateMainStats("MainStats");
+		analyzer.generateTiesExcel("TieStats");
+		analyzer.generateStrengthExcel("StrengthStats");
 		
 		// Generate file considering all nodes
 		analyzer.generateNodesFile(allDataFilename, allSize, false);
@@ -37,6 +41,8 @@ public class PerformAnalysis {
 		analyzer.generateAgeFile(allDataFilename, allSize, true);
 		analyzer.generateInfluenceFile(allDataFilename, allSize, true);
 		analyzer.generateEducationFile(allDataFilename, allSize, true);
+		analyzer.generateStrengthFile(allDataFilename, allSize, true);
+		analyzer.generateTiesFile(allDataFilename, allSize, true);
 		
 		// Generate file considering only respondents
 		analyzer.generateNodesFile(onlyRespondentsFilename, respondentsSize, false); // nodes of respondents only
@@ -47,9 +53,8 @@ public class PerformAnalysis {
 		analyzer.generateInfluenceFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateEducationFile(onlyRespondentsFilename, respondentsSize, true);
 				
-		// TEMP
-		
 		System.out.println();
+		
 		System.out.println("**Name -> Ties -> Total Strength -> Average Strength**");
 		
 		for (Node n : analyzer.getNodes()) {
@@ -59,6 +64,8 @@ public class PerformAnalysis {
 		
 		long endTime = System.nanoTime();
 		double inSeconds = (endTime - startTime)/1000000000.0; // runtime in seconds
+		
+		System.out.println();
 		
 		System.out.println("Generated all files in " + inSeconds + " seconds.");
 	}
