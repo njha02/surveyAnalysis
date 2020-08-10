@@ -143,7 +143,7 @@ public class SurveyAnalyzer {
 	
 	public void generateNodesFromReferrals() {
 		
-		System.out.println("**The following need to take the survey**");
+		System.out.println("**The following referrals need to take the survey**");
 		
 		for (int i = 0; i < actualSize; i++) {
 			
@@ -157,13 +157,13 @@ public class SurveyAnalyzer {
 				if (referralNode != null) {
 
 					referralNode.addTie();
-					referralNode.addStrength(j+1);
+					referralNode.addStrength(3-j);
 				}
 				
 				if (!haveSurveyTaker(name)) {
 					
 					System.out.println(name);
-					Node newSurveyTaker = new Node(name, nodes.size()+1, j+1);
+					Node newSurveyTaker = new Node(name, nodes.size()+1, 3-j);
 					nodes.add(newSurveyTaker);
 				}
 			}
@@ -445,16 +445,88 @@ public class SurveyAnalyzer {
 		}
 	}
 	
+	public void generateTiesFile(String toFile, int upToNodeWithID, boolean append) {
+		
+		try {
+			
+			FileWriter writer = new FileWriter(toFile, append);
+			
+			writer.write("*Partition NumberOfTies\n");
+			writer.write("*vertices " + upToNodeWithID + "\n");
+			
+			double averageTie = getTotalTiesWithGender("male")[1];
+			
+			for (int i = 0; i < upToNodeWithID; i++) {
+				
+				if (nodes.get(i).getTies() > averageTie) {
+					
+					writer.write("1\n");
+				
+				} else if (nodes.get(i).getTies() < averageTie) {
+					
+					writer.write("0\n");
+				
+				} else {
+					
+					writer.write("2\n");
+				}
+			}
+			
+			writer.write("\n");
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void generateStrengthFile(String toFile, int upToNodeWithID, boolean append) {
+		
+		try {
+			
+			FileWriter writer = new FileWriter(toFile, append);
+			
+			writer.write("*Partition Strength\n");
+			writer.write("*vertices " + upToNodeWithID + "\n");
+			
+			double averageStrength = getTotalStrengthWithGender("male")[1];
+			
+			for (int i = 0; i < upToNodeWithID; i++) {
+				
+				if (nodes.get(i).calculateAverageStrength() > averageStrength) {
+					
+					writer.write("1\n");
+				
+				} else if (nodes.get(i).calculateAverageStrength() < averageStrength) {
+					
+					writer.write("0\n");
+				
+				} else {
+					
+					writer.write("2\n");
+				}
+			}
+			
+			writer.write("\n");
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Writing data to an Excel file
 	 * using the Apache POI library.
 	 *
 	 * Reference www.codejava.net
 	 */
-	public void generateAnalysisSpreadsheet(String sheetName) throws IOException {
+	public void generateMainStats(String sheetName) throws IOException {
 		
 		XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Analysis");
+        XSSFSheet sheet = workbook.createSheet("MainAnalysis");
         
         // vape stats
         int vM = getNodesWithGender("true", "male")[0];
@@ -516,7 +588,7 @@ public class SurveyAnalyzer {
         double pdv17 = (1.0*dv17 / actualSize) * 100.0;
         double pdv18 = (1.0*dv18 / actualSize) * 100.0;
         
-        Object[][] bookData = {
+        Object[][] tableData = {
            
            {"", "Male", "Female", "Heavily Influenced", "Not Heavily Influenced", "9th grade", "10th grade", "11th grade", "12th grade", "Age 17 and under", "Age 18+"},
            {"Vape", vM, vF, vHI, vNHI, v9, v10, v11, v12, v17, v18},
@@ -528,13 +600,13 @@ public class SurveyAnalyzer {
  
         int rowCount = 0;
          
-        for (Object[] aBook : bookData) {
+        for (Object[] rowData : tableData) {
             
         	Row row = sheet.createRow(++rowCount);
              
             int columnCount = 0;
              
-            for (Object field : aBook) {
+            for (Object field : rowData) {
                 
             	Cell cell = row.createCell(++columnCount);
                 
@@ -553,6 +625,260 @@ public class SurveyAnalyzer {
         try (FileOutputStream outputStream = new FileOutputStream(sheetName + ".xlsx")) {
             workbook.write(outputStream);
         }
+	}
+	
+	/**
+	 * Writing data to an Excel file
+	 * using the Apache POI library.
+	 *
+	 * Reference www.codejava.net
+	 */
+	public void generateTiesExcel(String sheetName) throws IOException {
+		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("TiesStrengthAnalysis");
+        
+        double[] maleAndVape = getTiesWithGenderAndVape("true", "male");
+        double[] femaleAndVape = getTiesWithGenderAndVape("true", "female");
+        
+        double[] maleAndNoVape = getTiesWithGenderAndVape("false", "male");
+        double[] femaleAndNoVape = getTiesWithGenderAndVape("false", "female");
+        
+        double[] maleTotals = getTotalTiesWithGender("male");
+        double[] femaleTotals = getTotalTiesWithGender("female");
+        
+        double vM = maleAndVape[0];
+        double vF = femaleAndVape[0];
+        double vT = femaleAndVape[1];
+        
+        double dvM = maleAndNoVape[0];
+        double dvF = femaleAndNoVape[0];
+        double dvT = femaleAndNoVape[1];
+        
+        double tM = maleTotals[0];
+        double tF = femaleTotals[0];
+        double tT = femaleTotals[1];
+        
+        Object[][] tableData = {
+           
+           {"", "Male", "Female", "Total"},
+           {"Vape", vM, vF, vT},
+           {"Don't Vape", dvM, dvF, dvT},
+           {"Total", tM, tF, tT},
+        };
+ 
+        int rowCount = 0;
+         
+        for (Object[] rowData : tableData) {
+            
+        	Row row = sheet.createRow(++rowCount);
+             
+            int columnCount = 0;
+             
+            for (Object field : rowData) {
+                
+            	Cell cell = row.createCell(++columnCount);
+                
+            	if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                } else if (field instanceof Double) {
+                	
+                	double val = round((Double)(field), 2);
+                    cell.setCellValue(val);
+                }
+            }
+        }
+        
+        try (FileOutputStream outputStream = new FileOutputStream(sheetName + ".xlsx")) {
+            workbook.write(outputStream);
+        }
+	}
+	
+	/**
+	 * Writing data to an Excel file
+	 * using the Apache POI library.
+	 *
+	 * Reference www.codejava.net
+	 */
+	public void generateStrengthExcel(String sheetName) throws IOException {
+		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("TiesStrengthAnalysis");
+        
+        double[] maleAndVape = getStrengthWithGenderAndVape("true", "male");
+        double[] femaleAndVape = getStrengthWithGenderAndVape("true", "female");
+        
+        double[] maleAndNoVape = getStrengthWithGenderAndVape("false", "male");
+        double[] femaleAndNoVape = getStrengthWithGenderAndVape("false", "female");
+        
+        double[] maleTotals = getTotalStrengthWithGender("male");
+        double[] femaleTotals = getTotalStrengthWithGender("female");
+        
+        double vM = maleAndVape[0];
+        double vF = femaleAndVape[0];
+        double vT = femaleAndVape[1];
+        
+        double dvM = maleAndNoVape[0];
+        double dvF = femaleAndNoVape[0];
+        double dvT = femaleAndNoVape[1];
+        
+        double tM = maleTotals[0];
+        double tF = femaleTotals[0];
+        double tT = femaleTotals[1];
+        
+        Object[][] tableData = {
+           
+           {"", "Male", "Female", "Total"},
+           {"Vape", vM, vF, vT},
+           {"Don't Vape", dvM, dvF, dvT},
+           {"Total", tM, tF, tT},
+        };
+ 
+        int rowCount = 0;
+         
+        for (Object[] rowData : tableData) {
+            
+        	Row row = sheet.createRow(++rowCount);
+             
+            int columnCount = 0;
+             
+            for (Object field : rowData) {
+                
+            	Cell cell = row.createCell(++columnCount);
+                
+            	if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                } else if (field instanceof Double) {
+                	
+                	double val = round((Double)(field), 2);
+                    cell.setCellValue(val);
+                }
+            }
+        }
+        
+        try (FileOutputStream outputStream = new FileOutputStream(sheetName + ".xlsx")) {
+            workbook.write(outputStream);
+        }
+	}
+
+	private double[] getTiesWithGenderAndVape(String vape, String gender) {
+
+		int countForGender = 0; // for the average calculation
+		int totalTiesForGender = 0;
+		
+		int countForTotal = 0; // for the average calculation
+		int sumTiesForTotal = 0;
+
+		for (int i = 0; i < actualSize; i++) {
+
+			Node n = nodes.get(i);
+			
+			if (n.getFrequency().equals(vape)) {
+				
+				countForTotal++;
+				sumTiesForTotal += n.getTies();
+				
+				if (n.getGender().equals(gender)) {
+					
+					countForGender++;
+					totalTiesForGender += n.getTies();
+				}
+			}
+		}
+		
+		double genderAverage = round((1.0*totalTiesForGender) / countForGender, 2);
+		double totalAverage = round((1.0*sumTiesForTotal) / countForTotal, 2); // for first two rows in table 3
+		
+		double[] result = { genderAverage, totalAverage };
+		return result;
+	}
+	
+	private double[] getTotalTiesWithGender(String gender) {
+
+		int countForGender = 0; // for the average calculation
+		int totalTiesForGender = 0;
+		
+		int sumTiesForTotal = 0;
+
+		for (int i = 0; i < actualSize; i++) {
+
+			Node n = nodes.get(i);
+			sumTiesForTotal += n.getTies();
+			
+			if (n.getGender().equals(gender)) {
+				
+				countForGender++;
+				totalTiesForGender += n.getTies();
+			}
+		}
+		
+		double genderAverage = round((1.0*totalTiesForGender) / countForGender, 2);
+		double totalAverage = round((1.0*sumTiesForTotal) / actualSize, 2);
+		
+		double[] result = { genderAverage, totalAverage };
+		return result;
+	}
+	
+	private double[] getStrengthWithGenderAndVape(String vape, String gender) {
+
+		int countForGender = 0; // for the average calculation
+		int totalStrengthForGender = 0;
+		
+		int countForTotal = 0; // for the average calculation
+		int sumStrengthForTotal = 0;
+
+		for (int i = 0; i < actualSize; i++) {
+
+			Node n = nodes.get(i);
+			
+			if (n.getFrequency().equals(vape)) {
+				
+				countForTotal++;
+				sumStrengthForTotal += n.getStrengthSum();
+				
+				if (n.getGender().equals(gender)) {
+					
+					countForGender++;
+					totalStrengthForGender += n.getStrengthSum();
+				}
+			}
+		}
+		
+		double genderAverage = round((1.0*totalStrengthForGender) / countForGender, 2);
+		double totalAverage = round((1.0*sumStrengthForTotal) / countForTotal, 2); // for first two rows in table 3
+		
+		double[] result = { genderAverage, totalAverage };
+		return result;
+	}
+	
+	private double[] getTotalStrengthWithGender(String gender) {
+
+		int countForGender = 0; // for the average calculation
+		int totalStrengthForGender = 0;
+		
+		int sumStrengthForTotal = 0;
+
+		for (int i = 0; i < actualSize; i++) {
+
+			Node n = nodes.get(i);
+			sumStrengthForTotal += n.getStrengthSum();
+			
+			if (n.getGender().equals(gender)) {
+				
+				countForGender++;
+				totalStrengthForGender += n.getStrengthSum();
+			}
+		}
+		
+		double genderAverage = round((1.0*totalStrengthForGender) / countForGender, 2);
+		double totalAverage = round((1.0*sumStrengthForTotal) / actualSize, 2);
+		
+		double[] result = { genderAverage, totalAverage };
+		return result;
 	}
 	
 	public void generateAnalysis(String toFile) {
