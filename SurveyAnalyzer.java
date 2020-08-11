@@ -379,6 +379,7 @@ public class SurveyAnalyzer {
 				writer.write(age.replaceAll("[^0-9]", "")+"\n");
 			}
 			
+			writer.write("\n");
 			writer.close();
 			
 		} catch (IOException e) {
@@ -487,7 +488,7 @@ public class SurveyAnalyzer {
 			
 			FileWriter writer = new FileWriter(toFile, append);
 			
-			writer.write("*Partition Strength\n");
+			writer.write("*Partition AvgTieStrength\n");
 			writer.write("*vertices " + upToNodeWithID + "\n");
 			
 			double averageStrength = getTotalStrengthWithGender("male")[1];
