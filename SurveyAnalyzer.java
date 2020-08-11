@@ -495,6 +495,8 @@ public class SurveyAnalyzer {
 			
 			for (int i = 0; i < upToNodeWithID; i++) {
 				
+				System.out.println("YIIIRGE " + nodes.get(i).calculateAverageStrength() + "    " + averageStrength);
+				
 				if (nodes.get(i).calculateAverageStrength() > averageStrength) {
 					
 					writer.write("1\n");
@@ -506,6 +508,7 @@ public class SurveyAnalyzer {
 				} else {
 					
 					writer.write("2\n");
+					//System.out.println("EQUALLLL " + nodes.get(i).calculateAverageStrength() + "    " + averageStrength);
 				}
 			}
 			
@@ -839,12 +842,12 @@ public class SurveyAnalyzer {
 			if (n.getFrequency().equals(vape)) {
 				
 				countForTotal++;
-				sumStrengthForTotal += n.getStrengthSum();
+				sumStrengthForTotal += n.calculateAverageStrength();
 				
 				if (n.getGender().equals(gender)) {
 					
 					countForGender++;
-					totalStrengthForGender += n.getStrengthSum();
+					totalStrengthForGender += n.calculateAverageStrength();
 				}
 			}
 		}
@@ -866,12 +869,12 @@ public class SurveyAnalyzer {
 		for (int i = 0; i < actualSize; i++) {
 
 			Node n = nodes.get(i);
-			sumStrengthForTotal += n.getStrengthSum();
+			sumStrengthForTotal += n.calculateAverageStrength();
 			
 			if (n.getGender().equals(gender)) {
 				
 				countForGender++;
-				totalStrengthForGender += n.getStrengthSum();
+				totalStrengthForGender += n.calculateAverageStrength();
 			}
 		}
 		
