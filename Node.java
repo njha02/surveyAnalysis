@@ -61,7 +61,14 @@ public class Node {
 	
 	public double calculateAverageStrength() {
 		
-		return (1.0*strengthSum) / ties;
+		double result = (1.0*strengthSum) / ties;
+		
+		if (Double.isNaN(result)) {
+			
+			return 0;
+		}
+		
+		return result;
 	}
 
 	public String getConsent() {
@@ -171,7 +178,7 @@ public class Node {
 			
 			if (!r[i].equals("n/a")) {
 				
-				newRef[newRefIndex] = r[i];
+				newRef[newRefIndex] = r[i].trim();
 				newRefIndex++;
 			}
 		}
