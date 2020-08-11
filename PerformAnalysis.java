@@ -52,6 +52,8 @@ public class PerformAnalysis {
 		analyzer.generateAgeFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateInfluenceFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateEducationFile(onlyRespondentsFilename, respondentsSize, true);
+		analyzer.generateStrengthFile(onlyRespondentsFilename, respondentsSize, true);
+		analyzer.generateTiesFile(onlyRespondentsFilename, respondentsSize, true);
 				
 		System.out.println();
 		
