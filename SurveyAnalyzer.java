@@ -300,6 +300,63 @@ public class SurveyAnalyzer {
 		}
 	}
 	
+	// only can call when generateNodesFromReferrals() has been called
+	public void generateArcMatrixFile(String toFile, boolean append) {
+		
+		try {
+			
+			FileWriter writer = new FileWriter(toFile, append);
+			int[][] mat = new int[nodes.size()][nodes.size()];
+			
+			writer.write("*Matrix with dimensions: " + nodes.size() + "x" + nodes.size() + "\n");
+			
+			for (int i = 0; i < actualSize; i++) {
+				
+				String[] nameTokens = nodes.get(i).getReferrals();
+				
+				for (int j = 0; j < nameTokens.length; j++) {
+					
+					Node connection = getNodeWithName(nameTokens[j]);
+					mat[i][connection.getID()-1] = 1;
+				}
+			}
+			
+			for (int[] a : mat) {
+				
+				for (int n : a) {
+					
+					//writer.write(n + " ");
+				}
+				
+				//writer.write("\n");
+			}
+			
+			writer.write("\n");
+			writer.write("\n");
+			writer.write("\n");
+			
+			writer.write("[");
+			
+			for (int[] a : mat) {
+				
+				for (int n : a) {
+					
+					writer.write(n + " ");
+				}
+				
+				writer.write("; ");
+			}
+			
+			writer.write("]");
+			
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void generateVapeFile(String toFile, int upToNodeWithID, boolean append) {
 		
 		try {
