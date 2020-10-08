@@ -43,6 +43,7 @@ public class PerformAnalysis {
 		analyzer.generateEducationFile(allDataFilename, allSize, true);
 		analyzer.generateStrengthFile(allDataFilename, allSize, true);
 		analyzer.generateTiesFile(allDataFilename, allSize, true);
+		analyzer.generateArcMatrixFile("MatrixData.txt", false);
 		
 		// Generate file considering only respondents
 		analyzer.generateNodesFile(onlyRespondentsFilename, respondentsSize, false); // nodes of respondents only
