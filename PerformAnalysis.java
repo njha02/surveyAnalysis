@@ -44,6 +44,7 @@ public class PerformAnalysis {
 		analyzer.generateStrengthFile(allDataFilename, allSize, true);
 		analyzer.generateTiesFile(allDataFilename, allSize, true);
 		analyzer.generateArcMatrixFile("MatrixData.txt", false);
+		analyzer.generateStrengthFile("Strength.txt", false);
 		
 		// Generate file considering only respondents
 		analyzer.generateNodesFile(onlyRespondentsFilename, respondentsSize, false); // nodes of respondents only
@@ -65,10 +66,10 @@ public class PerformAnalysis {
 			System.out.println(n.getName() + " -> " + n.getTies() + " -> " + n.getStrengthSum() + " -> " + n.calculateAverageStrength());
 		}
 		
+		System.out.println();
+				
 		long endTime = System.nanoTime();
 		double inSeconds = (endTime - startTime)/1000000000.0; // runtime in seconds
-		
-		System.out.println();
 		
 		System.out.println("Generated all files in " + inSeconds + " seconds.");
 	}
