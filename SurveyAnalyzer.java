@@ -301,6 +301,43 @@ public class SurveyAnalyzer {
 	}
 	
 	// only can call when generateNodesFromReferrals() has been called
+	public void generateStrengthFile(String toFile, boolean append) {
+		
+		try {
+			
+			FileWriter writer = new FileWriter(toFile, append);
+			
+			writer.write("*Strength\n");
+			writer.write("[ ");
+			
+			int count = 0;
+			
+			for (int i = 0; i < actualSize; i++) {
+				
+				String[] nameTokens = nodes.get(i).getReferrals();
+				
+				for (int j = 0; j < nameTokens.length; j++) {
+					
+					Node connection = getNodeWithName(nameTokens[j]);
+					writer.write((j+1) + " ");
+					count++;
+				}
+			}
+			
+			writer.write("]");
+			
+			writer.write("\n");
+			writer.write(count + " strengths recorded.");
+			
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	// only can call when generateNodesFromReferrals() has been called
 	public void generateArcMatrixFile(String toFile, boolean append) {
 		
 		try {
@@ -552,7 +589,7 @@ public class SurveyAnalyzer {
 			
 			for (int i = 0; i < upToNodeWithID; i++) {
 				
-				System.out.println("YIIIRGE " + nodes.get(i).calculateAverageStrength() + "    " + averageStrength);
+				System.out.println(nodes.get(i).calculateAverageStrength() + "    " + averageStrength);
 				
 				if (nodes.get(i).calculateAverageStrength() > averageStrength) {
 					
