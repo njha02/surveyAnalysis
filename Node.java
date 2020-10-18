@@ -12,6 +12,7 @@ public class Node {
 	private int id;
 	private int ties;
 	private int strengthSum;
+	private int vapeTies;
 	
 	public Node(String c, String a, String gr, String gen, String ref, String i, String f, String n, int num) {
 		
@@ -26,6 +27,7 @@ public class Node {
 		id = num;
 		ties = 0;
 		strengthSum = 0;
+		vapeTies = 0;
 	}
 	
 	public Node(String n, int num, int s) { // constructor used for nodes created through referrals
@@ -42,6 +44,7 @@ public class Node {
 		id = num;
 		ties = 1;
 		strengthSum = s;
+		vapeTies = 0;
 	}
 	
 	public String toString() {
@@ -52,6 +55,20 @@ public class Node {
 	public void addTie() {
 		
 		this.ties += 1;
+	}
+	
+	public void addVapeTie() {
+		
+		this.vapeTies += 1;
+	}
+	
+	public double percentTiesToVapers() {
+		
+		// might have to handle issue with ties (when a referral doesn't refer back)
+		if (ties == 0)
+			return 2;
+		
+		return (1.0*vapeTies) / ties;
 	}
 	
 	public void addStrength(int val) {
@@ -151,6 +168,16 @@ public class Node {
 	public void setTies(int ties) {
 		
 		this.ties = ties;
+	}
+	
+	public int getVapeTies() {
+		
+		return vapeTies;
+	}
+	
+	public void setVapeTies(int vTies) {
+		
+		this.vapeTies = vTies;
 	}
 	
 	public int getStrengthSum() {
