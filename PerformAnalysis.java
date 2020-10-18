@@ -44,7 +44,8 @@ public class PerformAnalysis {
 		analyzer.generateStrengthFile(allDataFilename, allSize, true);
 		analyzer.generateTiesFile(allDataFilename, allSize, true);
 		analyzer.generateArcMatrixFile("MatrixData.txt", false);
-		analyzer.generateStrengthFile("Strength.txt", false);
+		analyzer.generateStrengthPartition("Strength.txt", false);
+		analyzer.generateTiesToVapers("TiesToVapers.txt", false);
 		
 		// Generate file considering only respondents
 		analyzer.generateNodesFile(onlyRespondentsFilename, respondentsSize, false); // nodes of respondents only
