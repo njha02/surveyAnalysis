@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -158,12 +159,32 @@ public class SurveyAnalyzer {
 
 					referralNode.addTie();
 					referralNode.addStrength(3-j);
+					
+					if (nodes.get(i).getFrequency().equals("true")) {
+						
+						referralNode.addVapeTie();
+					}
+					
+					// handle if two vapers refer each other
+					
+			    	boolean twoWay = Arrays.stream(referralNode.getReferrals()).anyMatch(nodes.get(i).getName()::equals);
+					
+					if (referralNode.getFrequency().equals("true") && !twoWay) {
+						
+						nodes.get(i).addVapeTie();
+					}
 				}
 				
 				if (!haveSurveyTaker(name)) {
 					
 					System.out.println(name);
 					Node newSurveyTaker = new Node(name, nodes.size()+1, 3-j);
+					
+					if (nodes.get(i).getFrequency().equals("true")) {
+						
+						newSurveyTaker.addVapeTie();
+					}
+					
 					nodes.add(newSurveyTaker);
 				}
 			}
@@ -301,7 +322,7 @@ public class SurveyAnalyzer {
 	}
 	
 	// only can call when generateNodesFromReferrals() has been called
-	public void generateStrengthFile(String toFile, boolean append) {
+	public void generateStrengthPartition(String toFile, boolean append) {
 		
 		try {
 			
@@ -328,6 +349,38 @@ public class SurveyAnalyzer {
 			
 			writer.write("\n");
 			writer.write(count + " strengths recorded.");
+			
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	// only can call when generateNodesFromReferrals() has been called
+	public void generateTiesToVapers(String toFile, boolean append) {
+		
+		try {
+			
+			FileWriter writer = new FileWriter(toFile, append);
+			
+			writer.write("*TiesToVapers\n");
+			writer.write("[ ");
+			
+			int count = 0;
+			
+			for (int i = 0; i < nodes.size(); i++) {
+				
+				writer.write(nodes.get(i).percentTiesToVapers() + " ");
+				count++;
+			}
+			
+			writer.write("]");
+			
+			writer.write("\n");
+			writer.write(count + " ties to vapers (percentage) recorded.");
 			
 			writer.close();
 			
