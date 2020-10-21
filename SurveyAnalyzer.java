@@ -148,30 +148,36 @@ public class SurveyAnalyzer {
 		
 		for (int i = 0; i < actualSize; i++) {
 			
-			String[] nameTokens = nodes.get(i).getReferrals();
+			Node currNode = nodes.get(i);
+			
+			String[] nameTokens = currNode.getReferrals();
 			
 			for (int j = 0; j < nameTokens.length; j++) {
 				
 				String name = nameTokens[j];
 				Node referralNode = getNodeWithName(name);
-				
+								
 				if (referralNode != null) {
 
+					currNode.addToRefList(referralNode);
+					
 					referralNode.addTie();
 					referralNode.addStrength(3-j);
 					
-					if (nodes.get(i).getFrequency().equals("true")) {
+					if (currNode.getFrequency().equals("true")) {
 						
 						referralNode.addVapeTie();
 					}
 					
-					// handle if two vapers refer each other
+					// handle if referral vapes, but does not refer current node
+					// (meaning current node's vapeTies should increment)
 					
-			    	boolean twoWay = Arrays.stream(referralNode.getReferrals()).anyMatch(nodes.get(i).getName()::equals);
+					// does the referral node refer the current node back?
+			    	boolean twoWay = Arrays.stream(referralNode.getReferrals()).anyMatch(currNode.getName()::equals);
 					
 					if (referralNode.getFrequency().equals("true") && !twoWay) {
 						
-						nodes.get(i).addVapeTie();
+						currNode.addVapeTie();
 					}
 				}
 				
@@ -180,7 +186,9 @@ public class SurveyAnalyzer {
 					System.out.println(name);
 					Node newSurveyTaker = new Node(name, nodes.size()+1, 3-j);
 					
-					if (nodes.get(i).getFrequency().equals("true")) {
+					currNode.addToRefList(newSurveyTaker);
+					
+					if (currNode.getFrequency().equals("true")) {
 						
 						newSurveyTaker.addVapeTie();
 					}
