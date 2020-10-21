@@ -84,9 +84,9 @@ public class Node {
 		
 		int totalTies = ties + additionalTotalTies;
 		
-		if (totalTies == 0)
+		if (totalTies == 0 && vapeTies == 0)
 			return 0;
-		if (ties == 0)
+		if (totalTies == 0)
 			return 2;
 		
 		return (1.0*vapeTies) / totalTies;
