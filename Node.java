@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Node {
 
@@ -6,6 +7,7 @@ public class Node {
 	private String grade;
 	private String gender;
 	private String[] referrals;
+	private ArrayList<Node> refList;
 	private String influence;
 	private String frequency;
 	private String name;
@@ -28,6 +30,7 @@ public class Node {
 		ties = 0;
 		strengthSum = 0;
 		vapeTies = 0;
+		refList = new ArrayList<Node>(3);
 	}
 	
 	public Node(String n, int num, int s) { // constructor used for nodes created through referrals
@@ -45,6 +48,7 @@ public class Node {
 		ties = 1;
 		strengthSum = s;
 		vapeTies = 0;
+		refList = new ArrayList<Node>(3);
 	}
 	
 	public String toString() {
@@ -63,12 +67,29 @@ public class Node {
 	}
 	
 	public double percentTiesToVapers() {
+						
+		int additionalTotalTies = 0; // at most 3 (refer 3 people who did not refer back)
+				
+		for (Node ref : refList) {
+			
+			if (ref != null && ref.getRefList() != null && !ref.getRefList().contains(this)) {
+				
+				additionalTotalTies++;
+			
+			} else {
+				
+				continue;
+			}
+		}
 		
-		// might have to handle issue with ties (when a referral doesn't refer back)
+		int totalTies = ties + additionalTotalTies;
+		
+		if (totalTies == 0)
+			return 0;
 		if (ties == 0)
 			return 2;
 		
-		return (1.0*vapeTies) / ties;
+		return (1.0*vapeTies) / totalTies;
 	}
 	
 	public void addStrength(int val) {
@@ -126,6 +147,14 @@ public class Node {
 
 	public void setReferrals(String[] referrals) {
 		this.referrals = referrals;
+	}
+	
+	public ArrayList<Node> getRefList() {
+		return refList;
+	}
+
+	public void addToRefList(Node n) {
+		refList.add(n);
 	}
 
 	public String getInfluence() {
