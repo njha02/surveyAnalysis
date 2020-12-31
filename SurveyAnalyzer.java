@@ -66,10 +66,16 @@ public class SurveyAnalyzer {
 				String referrals = varVals[7];
 				String influence = varVals[8];
 				String frequency = varVals[9];
+				String[] happiness = {varVals[10], varVals[11], varVals[12], varVals[13]};
+				
+				/*String gen_happy = varVals[10];
+				String peer_happy = varVals[11];
+				String go_lucky = varVals[12];
+				String never_happy = varVals[13];*/
 				
 				int id = rowNum;
 				
-				Node newSurveyTaker = new Node(consent,age,grade,gender,referrals,influence,frequency, name, id);
+				Node newSurveyTaker = new Node(consent,age,grade,gender,referrals,influence,frequency, name, id, happiness);
 				
 				if (!newSurveyTaker.getName().equals("n/a"))
 					nodes.add(newSurveyTaker);
@@ -650,7 +656,7 @@ public class SurveyAnalyzer {
 			
 			for (int i = 0; i < upToNodeWithID; i++) {
 				
-				System.out.println(nodes.get(i).calculateAverageStrength() + "    " + averageStrength);
+				//System.out.println(nodes.get(i).calculateAverageStrength() + "    " + averageStrength);
 				
 				if (nodes.get(i).calculateAverageStrength() > averageStrength) {
 					
@@ -663,7 +669,43 @@ public class SurveyAnalyzer {
 				} else {
 					
 					writer.write("2\n");
-					//System.out.println("EQUALLLL " + nodes.get(i).calculateAverageStrength() + "    " + averageStrength);
+					//System.out.println("EQUAL " + nodes.get(i).calculateAverageStrength() + "    " + averageStrength);
+				}
+			}
+			
+			writer.write("\n");
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void generateHappyRateFile(String toFile, int upToNodeWithID, boolean append) {
+		
+		try {
+			
+			FileWriter writer = new FileWriter(toFile, append);
+			
+			writer.write("*Partition AvgHappyRate\n");
+			writer.write("*vertices " + upToNodeWithID + "\n");
+			
+			double avgHappyRate = averageHappyRate();
+			
+			for (int i = 0; i < upToNodeWithID; i++) {
+								
+				if (nodes.get(i).getHappyRate() > avgHappyRate) {
+					
+					writer.write("1\n");
+				
+				} else if (nodes.get(i).getHappyRate() < avgHappyRate) {
+					
+					writer.write("0\n");
+				
+				} else {
+					
+					writer.write("2\n");
 				}
 			}
 			
@@ -1038,6 +1080,21 @@ public class SurveyAnalyzer {
 		
 		double[] result = { genderAverage, totalAverage };
 		return result;
+	}
+	
+	private double averageHappyRate() {
+
+		int sumHappyRate = 0;
+
+		for (int i = 0; i < actualSize; i++) {
+
+			Node n = nodes.get(i);
+			sumHappyRate += n.getHappyRate();
+		}
+		
+		double totalAverage = round((1.0*sumHappyRate) / actualSize, 2);
+		
+		return totalAverage;
 	}
 	
 	public void generateAnalysis(String toFile) {
