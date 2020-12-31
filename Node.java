@@ -15,8 +15,13 @@ public class Node {
 	private int ties;
 	private int strengthSum;
 	private int vapeTies;
+	private int genHappy;
+	private int peerHappy;
+	private int happyGoLucky;
+	private int neverSeemHappy;
+	private double happyRate;
 	
-	public Node(String c, String a, String gr, String gen, String ref, String i, String f, String n, int num) {
+	public Node(String c, String a, String gr, String gen, String ref, String i, String f, String n, int num, String[] h) {
 		
 		consent = c;
 		age = a;
@@ -31,6 +36,11 @@ public class Node {
 		strengthSum = 0;
 		vapeTies = 0;
 		refList = new ArrayList<Node>(3);
+		genHappy = Integer.parseInt(h[0]);
+		peerHappy = Integer.parseInt(h[1]);
+		happyGoLucky = Integer.parseInt(h[2]);
+		neverSeemHappy = Integer.parseInt(h[3]);
+		happyRate = (genHappy+peerHappy+happyGoLucky+(7-neverSeemHappy))/4.0;
 	}
 	
 	public Node(String n, int num, int s) { // constructor used for nodes created through referrals
@@ -219,6 +229,42 @@ public class Node {
 		this.strengthSum = strengthSum;
 	}
 	
+	public int getGenHappy() {
+		return genHappy;
+	}
+
+	public void setGenHappy(int genHappy) {
+		this.genHappy = genHappy;
+	}
+
+	public int getPeerHappy() {
+		return peerHappy;
+	}
+
+	public void setPeerHappy(int peerHappy) {
+		this.peerHappy = peerHappy;
+	}
+
+	public int getHappyGoLucky() {
+		return happyGoLucky;
+	}
+
+	public void setHappyGoLucky(int happyGoLucky) {
+		this.happyGoLucky = happyGoLucky;
+	}
+
+	public int getNeverSeemHappy() {
+		return neverSeemHappy;
+	}
+
+	public void setNeverSeemHappy(int neverSeemHappy) {
+		this.neverSeemHappy = neverSeemHappy;
+	}
+	
+	public double getHappyRate() {
+		return happyRate;
+	}
+
 	private String[] cleanReferrals(String[] r) {
 		
 		int count = r.length;
