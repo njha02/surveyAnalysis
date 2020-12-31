@@ -42,6 +42,7 @@ public class PerformAnalysis {
 		analyzer.generateInfluenceFile(allDataFilename, allSize, true);
 		analyzer.generateEducationFile(allDataFilename, allSize, true);
 		analyzer.generateStrengthFile(allDataFilename, allSize, true);
+		analyzer.generateHappyRateFile(allDataFilename, allSize, true);
 		analyzer.generateTiesFile(allDataFilename, allSize, true);
 		analyzer.generateArcMatrixFile("MatrixData.txt", false);
 		analyzer.generateStrengthPartition("Strength.txt", false);
@@ -56,6 +57,7 @@ public class PerformAnalysis {
 		analyzer.generateInfluenceFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateEducationFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateStrengthFile(onlyRespondentsFilename, respondentsSize, true);
+		analyzer.generateHappyRateFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateTiesFile(onlyRespondentsFilename, respondentsSize, true);
 				
 		System.out.println();
