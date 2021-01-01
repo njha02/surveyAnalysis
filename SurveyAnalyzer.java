@@ -39,7 +39,7 @@ public class SurveyAnalyzer {
 			
 			rowIterator.next(); // skip the headings
 			int rowNum = 1;
-			final int colsToRead = 10;
+			final int colsToRead = 14;
 			String[] varVals = new String[colsToRead];
 			
 			while (rowIterator.hasNext()) {
@@ -58,20 +58,20 @@ public class SurveyAnalyzer {
 					colCount++;
 				}
 				
-				String consent = varVals[2];
+				//String consent = varVals[2];
+				String consent = "confirmed on website";
 				String name = varVals[3];
-				String age = varVals[4];
-				String grade = varVals[5];
-				String gender = varVals[6];
-				String referrals = varVals[7];
+				String age = varVals[0];
+				String grade = varVals[1];
+				String gender = varVals[4];
+				String referrals = varVals[5] + ", " + varVals[6] + ", " + varVals[7];
 				String influence = varVals[8];
-				String frequency = varVals[9];
+				String frequency = varVals[9];				
 				String[] happiness = {varVals[10], varVals[11], varVals[12], varVals[13]};
 				
-				/*String gen_happy = varVals[10];
-				String peer_happy = varVals[11];
-				String go_lucky = varVals[12];
-				String never_happy = varVals[13];*/
+				/* not used yet
+				String email = varVals[14];
+				String school = varVals[2];*/
 				
 				int id = rowNum;
 				
@@ -718,6 +718,42 @@ public class SurveyAnalyzer {
 		}
 	}
 	
+	public void generatePeerHappinessFile(String toFile, int upToNodeWithID, boolean append) {
+		
+		try {
+			
+			FileWriter writer = new FileWriter(toFile, append);
+			
+			writer.write("*Partition AvgPeerHappiness\n");
+			writer.write("*vertices " + upToNodeWithID + "\n");
+			
+			double avgPeerHappiness = averagePeerHappiness();
+			
+			for (int i = 0; i < upToNodeWithID; i++) {
+								
+				if (nodes.get(i).getPeerHappy() > avgPeerHappiness) {
+					
+					writer.write("1\n");
+				
+				} else if (nodes.get(i).getPeerHappy() < avgPeerHappiness) {
+					
+					writer.write("0\n");
+				
+				} else {
+					
+					writer.write("2\n");
+				}
+			}
+			
+			writer.write("\n");
+			writer.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Writing data to an Excel file
 	 * using the Apache POI library.
@@ -817,7 +853,8 @@ public class SurveyAnalyzer {
                     cell.setCellValue((Integer) field);
                 } else if (field instanceof Double) {
                 	
-                	double val = round((Double)(field), 2);
+                	//double val = round((Double)(field), 2);
+                	double val = ((Double)(field));
                     cell.setCellValue(val);
                 }
             }
@@ -886,7 +923,8 @@ public class SurveyAnalyzer {
                     cell.setCellValue((Integer) field);
                 } else if (field instanceof Double) {
                 	
-                	double val = round((Double)(field), 2);
+                	//double val = round((Double)(field), 2);
+                	double val = ((Double)(field));
                     cell.setCellValue(val);
                 }
             }
@@ -955,7 +993,8 @@ public class SurveyAnalyzer {
                     cell.setCellValue((Integer) field);
                 } else if (field instanceof Double) {
                 	
-                	double val = round((Double)(field), 2);
+                	//double val = round((Double)(field), 2);
+                	double val = ((Double)(field));
                     cell.setCellValue(val);
                 }
             }
@@ -991,8 +1030,11 @@ public class SurveyAnalyzer {
 			}
 		}
 		
-		double genderAverage = round((1.0*totalTiesForGender) / countForGender, 2);
-		double totalAverage = round((1.0*sumTiesForTotal) / countForTotal, 2); // for first two rows in table 3
+		//double genderAverage = round((1.0*totalTiesForGender) / countForGender, 2);
+		//double totalAverage = round((1.0*sumTiesForTotal) / countForTotal, 2); // for first two rows in table 3
+		
+		double genderAverage = ((1.0*totalTiesForGender) / countForGender);
+		double totalAverage = ((1.0*sumTiesForTotal) / countForTotal); // for first two rows in table 3
 		
 		double[] result = { genderAverage, totalAverage };
 		return result;
@@ -1017,8 +1059,11 @@ public class SurveyAnalyzer {
 			}
 		}
 		
-		double genderAverage = round((1.0*totalTiesForGender) / countForGender, 2);
-		double totalAverage = round((1.0*sumTiesForTotal) / actualSize, 2);
+		//double genderAverage = round((1.0*totalTiesForGender) / countForGender, 2);
+		//double totalAverage = round((1.0*sumTiesForTotal) / actualSize, 2);
+		
+		double genderAverage = ((1.0*totalTiesForGender) / countForGender);
+		double totalAverage = ((1.0*sumTiesForTotal) / actualSize);
 		
 		double[] result = { genderAverage, totalAverage };
 		return result;
@@ -1049,8 +1094,11 @@ public class SurveyAnalyzer {
 			}
 		}
 		
-		double genderAverage = round((1.0*totalStrengthForGender) / countForGender, 2);
-		double totalAverage = round((1.0*sumStrengthForTotal) / countForTotal, 2); // for first two rows in table 3
+		//double genderAverage = round((1.0*totalStrengthForGender) / countForGender, 2);
+		//double totalAverage = round((1.0*sumStrengthForTotal) / countForTotal, 2); // for first two rows in table 3
+		
+		double genderAverage = ((1.0*totalStrengthForGender) / countForGender);
+		double totalAverage = ((1.0*sumStrengthForTotal) / countForTotal); // for first two rows in table 3
 		
 		double[] result = { genderAverage, totalAverage };
 		return result;
@@ -1075,8 +1123,11 @@ public class SurveyAnalyzer {
 			}
 		}
 		
-		double genderAverage = round((1.0*totalStrengthForGender) / countForGender, 2);
-		double totalAverage = round((1.0*sumStrengthForTotal) / actualSize, 2);
+		//double genderAverage = round((1.0*totalStrengthForGender) / countForGender, 2);
+		//double totalAverage = round((1.0*sumStrengthForTotal) / actualSize, 2);
+		
+		double genderAverage = ((1.0*totalStrengthForGender) / countForGender);
+		double totalAverage = ((1.0*sumStrengthForTotal) / actualSize);
 		
 		double[] result = { genderAverage, totalAverage };
 		return result;
@@ -1092,7 +1143,24 @@ public class SurveyAnalyzer {
 			sumHappyRate += n.getHappyRate();
 		}
 		
-		double totalAverage = round((1.0*sumHappyRate) / actualSize, 2);
+		//double totalAverage = round((1.0*sumHappyRate) / actualSize, 2);
+		double totalAverage = ((1.0*sumHappyRate) / actualSize);
+		
+		return totalAverage;
+	}
+	
+	private double averagePeerHappiness() {
+
+		int sumPeerHappiness = 0;
+
+		for (int i = 0; i < actualSize; i++) {
+
+			Node n = nodes.get(i);
+			sumPeerHappiness += n.getPeerHappy();
+		}
+		
+		//double totalAverage = round((1.0*sumHappyRate) / actualSize, 2);
+		double totalAverage = ((1.0*sumPeerHappiness) / actualSize);
 		
 		return totalAverage;
 	}
