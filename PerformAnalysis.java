@@ -6,7 +6,7 @@ public class PerformAnalysis {
 		
 		long startTime = System.nanoTime();
 		
-		SurveyAnalyzer analyzer = new SurveyAnalyzer("/Users/NalinJha/Downloads/SocialNetworkSurveyResults.xlsx");
+		SurveyAnalyzer analyzer = new SurveyAnalyzer("/Users/NalinJha/Desktop/Java/ExcelSurveyAnalysis/ExcelSheets/VapeSurveyResponses.xlsx");
 		
 		analyzer.generateNodesFromReferrals(); // must do this before performing any analysis
 		
@@ -43,6 +43,7 @@ public class PerformAnalysis {
 		analyzer.generateEducationFile(allDataFilename, allSize, true);
 		analyzer.generateStrengthFile(allDataFilename, allSize, true);
 		analyzer.generateHappyRateFile(allDataFilename, allSize, true);
+		analyzer.generatePeerHappinessFile(allDataFilename, allSize, true);
 		analyzer.generateTiesFile(allDataFilename, allSize, true);
 		analyzer.generateArcMatrixFile("MatrixData.txt", false);
 		analyzer.generateStrengthPartition("Strength.txt", false);
@@ -58,6 +59,7 @@ public class PerformAnalysis {
 		analyzer.generateEducationFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateStrengthFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateHappyRateFile(onlyRespondentsFilename, respondentsSize, true);
+		analyzer.generatePeerHappinessFile(onlyRespondentsFilename, respondentsSize, true);
 		analyzer.generateTiesFile(onlyRespondentsFilename, respondentsSize, true);
 				
 		System.out.println();
