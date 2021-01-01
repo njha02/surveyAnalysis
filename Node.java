@@ -36,10 +36,10 @@ public class Node {
 		strengthSum = 0;
 		vapeTies = 0;
 		refList = new ArrayList<Node>(3);
-		genHappy = Integer.parseInt(h[0]);
-		peerHappy = Integer.parseInt(h[1]);
-		happyGoLucky = Integer.parseInt(h[2]);
-		neverSeemHappy = Integer.parseInt(h[3]);
+		genHappy = Integer.parseInt(""+h[0].charAt(0));
+		peerHappy = Integer.parseInt(""+h[1].charAt(0));
+		happyGoLucky = Integer.parseInt(""+h[2].charAt(0));
+		neverSeemHappy = Integer.parseInt(""+h[3].charAt(0));
 		happyRate = (genHappy+peerHappy+happyGoLucky+(7-neverSeemHappy))/4.0;
 	}
 	
