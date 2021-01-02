@@ -506,7 +506,11 @@ public class SurveyAnalyzer {
 			
 			for (int i = 0; i < upToNodeWithID; i++) {
 				
-				if (nodes.get(i).getInfluence().equals("false")) {
+				if (nodes.get(i).getInfluence().equals("2")) {
+					
+					writer.write("2\n");
+					
+				} else if (nodes.get(i).getInfluence().equals("false")) {
 					
 					writer.write("0\n");
 				
