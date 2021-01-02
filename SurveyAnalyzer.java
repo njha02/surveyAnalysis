@@ -694,8 +694,12 @@ public class SurveyAnalyzer {
 			double avgHappyRate = averageHappyRate();
 			
 			for (int i = 0; i < upToNodeWithID; i++) {
-								
-				if (nodes.get(i).getHappyRate() > avgHappyRate) {
+				
+				if (nodes.get(i).getHappyRate() == 0) {
+					
+					writer.write("2\n");
+					
+				} else if (nodes.get(i).getHappyRate() > avgHappyRate) {
 					
 					writer.write("1\n");
 				
@@ -730,8 +734,12 @@ public class SurveyAnalyzer {
 			double avgPeerHappiness = averagePeerHappiness();
 			
 			for (int i = 0; i < upToNodeWithID; i++) {
-								
-				if (nodes.get(i).getPeerHappy() > avgPeerHappiness) {
+				
+				if (nodes.get(i).getPeerHappy() == 0) {
+					
+					writer.write("2\n");
+					
+				} else if (nodes.get(i).getPeerHappy() > avgPeerHappiness) {
 					
 					writer.write("1\n");
 				
